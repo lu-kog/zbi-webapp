@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', getData);
 	        if(responseData.statuscode == 200){
 	            createTable(responseData.data);
 	        }
-	
+        
 	    }
     
 	}
@@ -36,6 +36,7 @@ function createTable(ApplicationsData){
     // Populate the table with data
     ApplicationsData.forEach(function(item, index) {
         var row = tableBody.insertRow();
+        row.setAttribute("id",`row-${item.application_id}`);
         var cellIndex = row.insertCell(0);
         var cellApplicationID = row.insertCell(1);
         var cellCustomerName = row.insertCell(2);
@@ -76,10 +77,46 @@ function submitAction(applicationID) {
     if (selectedAction === 'reject') {
         reason = prompt("Please enter the reason for rejection:");
         
-        // send request to reject an application
+        reqData = {};
+        reqData.applicationID = applicationID;
+        reqData.reason = reason;
+
+        // send request for reject
+        sendRequest("RejectApplications","application/json", reqData, actionCallback);
+
+
+	    function actionCallback(resposeTxt) {
+	        var responseData = JSON.parse(resposeTxt);
+	        if(responseData.statuscode == 200){
+                // deleted successfully!
+                alert("deleted successfully");
+                deleteRow(applicationID);
+	        }
+	    }
 
     }else if (selectedAction === 'approve') {
-        // send request to approval of respective applicatoin
+        reqData = {};
+        reqData.applicationID = applicationID;
+
+        // send request to approve
+        sendRequest("ApproveApplication","application/json", reqData, actionCallback);
+
+
+	    function actionCallback(resposeTxt) {
+	        var responseData = JSON.parse(resposeTxt);
+	        if(responseData.statuscode == 200){
+                // deleted successfully!
+                alert("approved!");
+                deleteRow(applicationID);
+	        }
+	    }
+        document.getElementById
     }
 
+}
+
+function deleteRow(appID){
+    // delete a row by application ID
+    var rowtoDelete = _(`#${appID}`);
+    rowtoDelete.remove();
 }

@@ -57,12 +57,6 @@ public class IsNewCustomer extends HttpFilter implements Filter {
 		logger.info("NewCustomerCheck-Filter2 : started");
 		
 		String jsonString = (String) request.getAttribute("jsonData");
-
-//        String line;
-//        while ((line = reader.readLine()) != null) {
-//        	jsonString+=(line);
-//        }
-        
         
         JSONObject jsonObject = new JSONObject();
 		JSONObject jsonResponse = new JSONObject();

@@ -11,6 +11,8 @@ import org.apache.log4j.PropertyConfigurator;
 
 import utils.CommonLogger;
 import utils.DB;
+import utils.sqlFile;
+
 import com.customer.Customers;
 
 public class CustomerDAO {
@@ -29,11 +31,13 @@ public class CustomerDAO {
 		Connection conn = DB.getConnection();
             
             try{
-            	PreparedStatement statement = conn.prepareStatement("insert into Users (userID, role) values (?, 1);");
+            	PreparedStatement statement = conn.prepareStatement("insert into Users (userID, role) values (?, 'Customer');");
             	statement.setString(1, customer.getCusID());
             	
+            	logger.info("new User:"+statement);
             	int rowsAffected = statement.executeUpdate();
-            		
+            	sqlFile.append(statement.toString());
+            	
             	statement = conn.prepareStatement("INSERT INTO Customers (cusID, firstName, lastName, DOB, email, phone, address) values (?, ?, ?, ?, ?, ?, ?)");
             	
             	statement.setString(1, customer.getCusID());
@@ -44,11 +48,13 @@ public class CustomerDAO {
                 statement.setString(6, customer.getPhone());
                 statement.setString(7, customer.getAddress());
                 
-
+                logger.info("New Customer: "+statement);
+                
                 rowsAffected += statement.executeUpdate();
                 if (rowsAffected < 2) {
                     logger.error("No customer found with cusID: " + customer.getCusID());
                 } else {
+                	sqlFile.append(statement.toString());
                     logger.info("Customer updated successfully."+customer.getFirstName());
                 }
             }catch (SQLException e) {
@@ -57,7 +63,6 @@ public class CustomerDAO {
             }
 
         }
-	
 	
 	
 }

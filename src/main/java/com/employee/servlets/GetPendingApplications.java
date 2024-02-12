@@ -69,6 +69,7 @@ public class GetPendingApplications extends HttpServlet {
 		
 		}catch (Exception e) {
 			JSONObject errJson = JSON.CreateErrorJson(400, "404 Error!");
+			response.getWriter().write(errJson.toString());
 		}
 	}
 

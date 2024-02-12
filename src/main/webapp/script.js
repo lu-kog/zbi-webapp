@@ -85,7 +85,6 @@ function sendRequest(url, contentType, data, callbackfn) {
 		xhr.send();
 	}
 
-
 }
 
 

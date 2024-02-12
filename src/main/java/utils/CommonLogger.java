@@ -14,6 +14,5 @@ public class CommonLogger {
 	public Logger getLogger() {
 		return logger;
 	}
-	
 
 }

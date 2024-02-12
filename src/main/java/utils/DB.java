@@ -10,6 +10,8 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import com.accounts.Account;
+
 
 public class DB {
 
@@ -113,6 +115,41 @@ public class DB {
         }
 
     }
+
+
+	
+	public static void createNewAccount(String cusID, Account newAc) throws Exception {
+        try {
+        	Connection conn = DB.getConnection();
+            String newAcntInsrt = "INSERT INTO Accounts (AccountID, cusID, IFSC, AccType, balance, dateOpened, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            
+            	PreparedStatement statement = conn.prepareStatement(newAcntInsrt);
+                // Set values for the prepared statement
+                statement.setString(1, newAc.getAccountNumber());
+                statement.setString(2, cusID);
+                statement.setString(3, newAc.getIfsc());
+                statement.setString(4, newAc.getAccount_type());
+                statement.setDouble(5, newAc.getBalance());
+                statement.setDate(6, java.sql.Date.valueOf(newAc.getOpenedDate()));
+                statement.setString(7, newAc.isStatus() ? "Active" : "Inactive");
+
+                
+                int affRows = statement.executeUpdate();
+                
+                if (affRows!=1) {
+                	logger.error("Can't create Account :"+statement);
+					throw new Exception("Can't create Account!");
+				}else {
+					sqlFile.append(statement.toString());
+				}
+                
+                
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 	
 	
 	

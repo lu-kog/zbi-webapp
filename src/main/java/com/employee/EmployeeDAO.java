@@ -8,11 +8,14 @@ import java.time.LocalDate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.json.JSONObject;
 
 import com.customer.Customers;
 
 import utils.CommonLogger;
 import utils.DB;
+import utils.JSON;
+import utils.sqlFile;
 
 public class EmployeeDAO {
 	private static EmployeeDAO obj = new EmployeeDAO();
@@ -30,16 +33,17 @@ public class EmployeeDAO {
             
             try {
             	
-            	PreparedStatement statement = conn.prepareStatement("insert into Applications (application_id, Application_type) values (?, ?);");
+            	PreparedStatement statement = conn.prepareStatement("insert into Applications (application_id, Application_type) values (?, 1);");
             	statement.setString(1, refID);                
-                statement.setInt(2, accountType);
 
                 int rowsAffected = statement.executeUpdate();
                 
-                statement = conn.prepareStatement("insert into Bank_Account_Application (application_id, cusID, application_date) values (?, ?, ?);");
+                statement = conn.prepareStatement("insert into Bank_Account_Application (application_id, cusID, application_date, account_type) values (?, ?, ?, ?);");
                 statement.setString(1, refID);
             	statement.setString(2, customer.getCusID());
                 statement.setDate(3, Date.valueOf(LocalDate.now()));
+                statement.setInt(4, accountType);
+
                 
                 rowsAffected += statement.executeUpdate();
                 
@@ -53,6 +57,31 @@ public class EmployeeDAO {
                 logger.error("SQL error on update customer "+customer.getCusID()+" - "+e);
                 throw new Exception("Something went wrong on your application! Please contact admin.");
             }
+	}
+	
+	
+	public boolean approveApplication(String empID, String applicationId) throws Exception {
+		
+		String query = "update `Applications` set status = 'approved', `EmpID` = ? where application_id like ? ;";
+        Connection conn = DB.getConnection();
+        
+        try {
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setString(1, empID);
+			stmt.setString(2, applicationId);
+			
+			
+			int affectedRow = stmt.executeUpdate();
+			if (affectedRow == 1) {
+				sqlFile.append(stmt.toString());
+				logger.info(applicationId +"Application:"+applicationId+" approved!");
+				return true;
+			}else {
+				throw new Exception("Something went wrong!");
+			}
+        }catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	public void renewApplication(String mobNum, String refID, int accountType) throws Exception {
