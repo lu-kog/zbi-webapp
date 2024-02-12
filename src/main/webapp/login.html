@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/0b8ef7ee45.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="left-section">
+            <div id="logo-container">
+                <img id="logo" src="logo.png" width="25%" alt="Logo">
+                <h2 id="logoHead">ZBI</h2>
+            </div>
+            <div id="vector-container">
+                <img src="login.svg" alt="login.svg">
+            </div>
+        </div>
+        <div class="right-section">
+            <h2 id="welcomeH">Welcome to Internet Banking</h2>
+            <p>If you don't have an account, <a href="#">Register here</a></p>
+            <form id="login_form" action="#" method="POST">
+                <label for="username">User Name</label>
+                <input type="text" id="username" name="username" required>
+                <label for="passwd">Password</label>
+                <input type="password" id="passwd" name="passwd" required>
+                <button type="submit">Login</button>
+            </form>
+            <div class="links">
+                <a href="#">Forgot Password?</a>
+                <a href="#">Forgot User id?</a>
+            </div>
+            <p id="secure"><i class="fa-regular fa-user-shield"></i> You are loggin into secure site</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+
+
+
+        window.onload = function () {
+
+            var cookies = getCookies();
+
+            var userID = getCookie('userID');
+            var role = getCookie('role');
+            var sessionID = getCookie('sessionID');
+
+            if (userID && role && sessionID) {
+                var data = JSON.stringify({
+                    "userID": userID,
+                    "role": role,
+                    "sessionID": sessionID
+                });
+
+                sendRequest("SessionAuthorization", "application/json", data, loginCallfunc);
+
+            }
+
+            var loginCallfunc = function (responseText) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Check if the session is valid
+                if (response.statuscode == 200) {
+                    // Session is valid, skip the login part
+                    console.log('Session is valid. Skipping login.');
+
+                    window.location.href = "./customer.html"
+                }
+            }
+        };
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

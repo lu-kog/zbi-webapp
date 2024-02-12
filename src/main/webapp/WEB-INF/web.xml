@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>zbi.bank</display-name>
+  
+  
+  
+  
+	<!-- servlets -->
+	
+	
+	<servlet>
+		<description>
+		</description>
+		<display-name>ApplyForAccount</display-name>
+		<servlet-name>ApplyForAccount</servlet-name>
+		<servlet-class>com.customer.servlets.ApplyForAccount</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>RenewApplication</display-name>
+		<servlet-name>RenewApplication</servlet-name>
+		<servlet-class>com.customer.servlets.RenewApplication</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>LoginUser</display-name>
+		<servlet-name>LoginUser</servlet-name>
+		<servlet-class>com.authentication.LoginUser</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>SessionAuthorization</display-name>
+		<servlet-name>SessionAuthorization</servlet-name>
+		<servlet-class>com.authentication.SessionAuthorization</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>GetPendingApplications</display-name>
+		<servlet-name>GetPendingApplications</servlet-name>
+		<servlet-class>com.employee.servlets.GetPendingApplications</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApplyForAccount</servlet-name>
+		<url-pattern>/ApplyForAccount</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RenewApplication</servlet-name>
+		<url-pattern>/RenewApplication</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LoginUser</servlet-name>
+		<url-pattern>/Login</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SessionAuthorization</servlet-name>
+		<url-pattern>/SessionAuthorization</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>GetPendingApplications</servlet-name>
+		<url-pattern>/GetPendingApplications</url-pattern>
+	</servlet-mapping>
+	
+	
+
+	<!-- filters -->
+
+
+	<filter>
+		<description>
+		</description>
+		<display-name>NewCustomerInputValidationFilter</display-name>
+		<filter-name>NewCustomerInputValidationFilter</filter-name>
+		<filter-class>com.customer.servlets.NewCustomerInputValidationFilter</filter-class>
+	</filter>
+	<filter>
+		<description>
+		</description>
+		<display-name>IsNewCustomer</display-name>
+		<filter-name>IsNewCustomer</filter-name>
+		<filter-class>com.customer.servlets.IsNewCustomer</filter-class>
+	</filter>
+	<filter>
+		<description>
+		</description>
+		<display-name>LoginInputValidation</display-name>
+		<filter-name>LoginInputValidation</filter-name>
+		<filter-class>com.authentication.LoginInputValidation</filter-class>
+	</filter>
+	<filter>
+		<description>
+		</description>
+		<display-name>UserAuthorization</display-name>
+		<filter-name>UserAuthorization</filter-name>
+		<filter-class>com.authentication.UserAuthorization</filter-class>
+	</filter>
+	<filter>
+		<description>
+		</description>
+		<display-name>SessionValidation</display-name>
+		<filter-name>SessionValidation</filter-name>
+		<filter-class>com.authentication.SessionValidation</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>NewCustomerInputValidationFilter</filter-name>
+		<url-pattern>/ApplyForAccount</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>IsNewCustomer</filter-name>
+		<url-pattern>/ApplyForAccount</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>LoginInputValidation</filter-name>
+		<url-pattern>/Login</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>UserAuthorization</filter-name>
+		<url-pattern>/Login</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SessionValidation</filter-name>
+		<url-pattern>/SessionValidation</url-pattern>
+	</filter-mapping>
+
+  
+  
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+  </welcome-file-list>
+</web-app>
