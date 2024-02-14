@@ -68,7 +68,7 @@ public class SessionAuthorization extends HttpServlet {
     		}
 		} catch (Exception e) {
 			logger.error("JSON or sql exception session autherize: "+e);
-			JSONObject errJson = JSON.CreateErrorJson(400, "Something went wrong!");
+			JSONObject errJson = JSON.CreateErrorJson(400, "Invalid Session!");
 			response.getWriter().write(errJson.toString());
 		}
         

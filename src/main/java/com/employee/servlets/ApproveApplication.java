@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import utils.CommonLogger;
 import utils.DB;
 import utils.JSON;
+import utils.Query;
 
 /**
  * Servlet implementation class ApproveApplication
@@ -89,11 +90,11 @@ public class ApproveApplication extends HttpServlet {
 	
 
 	private boolean isPending(String applicationId) throws Exception {
-        String query = "select status from Applications where application_id like ? ;";
+        
         Connection conn = DB.getConnection();
         
         try {
-			PreparedStatement stmt = conn.prepareStatement(query);
+			PreparedStatement stmt = conn.prepareStatement(Query.selectStatusOfApplicationByID);
 			stmt.setString(1, applicationId);
 			
 			logger.info("getting status: "+stmt);

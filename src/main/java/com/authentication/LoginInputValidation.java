@@ -27,6 +27,7 @@ import utils.JSON;
  * Servlet Filter implementation class LoginInputValidation
  */
 public class LoginInputValidation extends HttpFilter implements Filter {
+	private static final long serialVersionUID = 1L;
 	static Logger logger = new CommonLogger(LoginInputValidation.class).getLogger();
 
     /**

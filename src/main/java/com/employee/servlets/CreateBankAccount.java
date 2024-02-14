@@ -19,7 +19,10 @@ import utils.CommonLogger;
 import utils.DB;
 import utils.Generator;
 import utils.JSON;
+import utils.Query;
+
 import com.accounts.Account;
+import com.customer.CustomerDAO;
 import com.employee.EmployeeDAO;
 
 import javax.servlet.annotation.WebInitParam;
@@ -63,7 +66,6 @@ public class CreateBankAccount extends HttpServlet {
 		
 		// get cusID, email, phone and A/c type from Customers  from query
 		
-		String applicationFetchQuery = "select b.cusID, email, phone, account_type from Customers join Bank_Account_Application as b on Customers.cusID = b.cusID  where b.application_id like ?;";
 		
 		String empID = request.getParameter("empID");
 		String applicationID = request.getParameter("application_id");
@@ -73,7 +75,7 @@ public class CreateBankAccount extends HttpServlet {
         
         try {
 			
-        	PreparedStatement stmt = conn.prepareStatement(applicationFetchQuery);
+        	PreparedStatement stmt = conn.prepareStatement(Query.fetchCustomerDetailsByRefID);
 			stmt.setString(1, applicationID);
         	
 			ResultSet results = stmt.executeQuery();
@@ -95,10 +97,12 @@ public class CreateBankAccount extends HttpServlet {
 					logger.info("New Account created! - "+account_number);
 					
 					// create strong password and send to his mail!
-					// send mail 
+					String newPasswd = Generator.generateStrongPassword(8);
+					CustomerDAO.getCustomerDAO().updatePasswd(cusID, newPasswd);
+					// send sms or mail
 					
 					EmployeeDAO.getEmpDAO().approveApplication(empID, applicationID);
-					System.out.println("Everything works perfectly!");
+					System.out.println("Everything works good!");
 					
 					JSONObject resp = JSON.CreateErrorJson(200, "Account created successfully!");
 					response.getWriter().write(resp.toString());

@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import utils.DB;
 import utils.JSON;
+import utils.Query;
 
 /**
  * Servlet Filter implementation class ApproveApplication
@@ -93,11 +94,10 @@ public class ValidateApplication extends HttpFilter implements Filter {
 
 	
 	private boolean isPending(String applicationId) throws Exception {
-        String query = "select status from Applications where application_id like = ? ;";
         Connection conn = DB.getConnection();
         
         try {
-			PreparedStatement stmt = conn.prepareStatement(query);
+			PreparedStatement stmt = conn.prepareStatement(Query.applicationStatusByRefID);
 			ResultSet results = stmt.executeQuery();
 			if (results.next()) {
 				boolean isActive = results.getString("status").equals("pending");

@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import utils.CommonLogger;
 import utils.DB;
 import utils.JSON;
+import utils.Query;
 
 
 /**
@@ -116,10 +117,9 @@ public class IsNewCustomer extends HttpFilter implements Filter {
 	private static boolean hasActiveAcnt(String mobileNumber) throws SQLException {
 		// write a join querry to Customers and Accounts table to check his account is in active.
 		
-		String querry = "select status from `Accounts` join `Customers` on `Accounts`.`cusID` = `Customers`.`cusID` where `Customers`.`cusID` like (select `Customers`.`cusID` from `Customers` where phone like ?);";
 		Connection conn = DB.getConnection();
 		
-		try (PreparedStatement statement = conn.prepareStatement(querry)) {
+		try (PreparedStatement statement = conn.prepareStatement(Query.selectAccountStatusFromPhone)) {
             statement.setString(1, mobileNumber);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -138,10 +138,9 @@ public class IsNewCustomer extends HttpFilter implements Filter {
 	
 	private static boolean hasPendingApplication(String mobileNumber) throws SQLException{
 
-		String querry = "SELECT A.status FROM Bank_Account_Application AS BAA join `Applications` as A on BAA.application_id = A.application_id JOIN Customers AS C ON BAA.cusID = C.cusID WHERE C.phone LIKE ? ORDER BY BAA.application_date DESC limit 1;";
 		Connection conn = DB.getConnection();
 		
-		try (PreparedStatement statement = conn.prepareStatement(querry)) {
+		try (PreparedStatement statement = conn.prepareStatement(Query.getApplicationStatusByPhone)) {
             statement.setString(1, mobileNumber);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -161,10 +160,9 @@ public class IsNewCustomer extends HttpFilter implements Filter {
 	
 	private static boolean hasRejectedApplication(String mobileNumber) throws Exception{
 
-		String querry = "SELECT BAA.application_date, A.status FROM Bank_Account_Application AS BAA join `Applications` as A on BAA.application_id = A.application_id JOIN Customers AS C ON BAA.cusID = C.cusID WHERE C.phone LIKE ? ORDER BY BAA.application_date DESC limit 1;";
 		Connection conn = DB.getConnection();
 		
-		try (PreparedStatement statement = conn.prepareStatement(querry)) {
+		try (PreparedStatement statement = conn.prepareStatement(Query.getApplicationDateByPhone)) {
             statement.setString(1, mobileNumber);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -173,7 +171,6 @@ public class IsNewCustomer extends HttpFilter implements Filter {
             	LocalDate applicationDate = rs.getDate(1).toLocalDate();
             	String appliStatus = rs.getString(2);
             	LocalDate today = LocalDate.now().minusDays(1);
-            	
             	
 				if (appliStatus.equals("rejected")) {
 					if (applicationDate.isBefore(today)) {						

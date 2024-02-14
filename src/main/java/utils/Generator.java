@@ -40,5 +40,21 @@ public class Generator {
 		return uid;
 	}
 	
+	public static String generateStrongPassword(int len) {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String special = "!@#$%^&*-_=+?";
+
+        String allCharacters = upper + lower + digits + special;
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < len; i++) {
+            int randomIndex = (int) (Math.random() * allCharacters.length());
+            password.append(allCharacters.charAt(randomIndex));
+        }
+
+        return password.toString();
+    }
 	
 }

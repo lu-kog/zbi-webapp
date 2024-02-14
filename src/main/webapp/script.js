@@ -22,10 +22,12 @@ function getCookie(cookieName){
 	return cookiesObj[cookieName];
 }
 
+function setCookie(cookieName, value){
+	document.cookie=`${cookieName}=${value}`;
+}
+
 
 function applyAccount() {
-	// check mobile number has active account!
-	// check mobile number's previous application is pending
 
 	var newCustomer = {
 		account_type: _('#account_type').value,
@@ -49,6 +51,7 @@ function applicationResponse(responseText) {
 	var response = JSON.parse(responseText);
 
 	if (response.statuscode == 400) {
+		
 		alert(response.errorMessage);
 	} else if (response.statuscode == 200) {
 		alert("Your ref id : " + response.data.refID);
@@ -80,7 +83,10 @@ function sendRequest(url, contentType, data, callbackfn) {
 	};
 
 	if (data != null) {
-		xhr.send(JSON.stringify(data));
+		if(contentType.includes('json')){
+			data = JSON.stringify(data);
+		}
+		xhr.send(data);
 	} else {
 		xhr.send();
 	}

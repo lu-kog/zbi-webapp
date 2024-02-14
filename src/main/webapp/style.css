@@ -43,7 +43,7 @@ body {
     gap: 30px;
 }
 
-.right-section form {
+#login_form {
     display: flex;
     flex-direction: column;
 }

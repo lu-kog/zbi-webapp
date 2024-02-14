@@ -8,9 +8,11 @@ import java.time.LocalDate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.mindrot.jbcrypt.BCrypt;
 
 import utils.CommonLogger;
 import utils.DB;
+import utils.Query;
 import utils.sqlFile;
 
 import com.customer.Customers;
@@ -31,14 +33,14 @@ public class CustomerDAO {
 		Connection conn = DB.getConnection();
             
             try{
-            	PreparedStatement statement = conn.prepareStatement("insert into Users (userID, role) values (?, 'Customer');");
+            	PreparedStatement statement = conn.prepareStatement(Query.insertNewCustomerToUser);
             	statement.setString(1, customer.getCusID());
             	
             	logger.info("new User:"+statement);
             	int rowsAffected = statement.executeUpdate();
             	sqlFile.append(statement.toString());
             	
-            	statement = conn.prepareStatement("INSERT INTO Customers (cusID, firstName, lastName, DOB, email, phone, address) values (?, ?, ?, ?, ?, ?, ?)");
+            	statement = conn.prepareStatement(Query.insertNewCustomer);
             	
             	statement.setString(1, customer.getCusID());
             	statement.setString(2, customer.getFirstName());
@@ -63,6 +65,43 @@ public class CustomerDAO {
             }
 
         }
+
 	
+	
+	public boolean updatePasswd(String userId, String newPassword) throws Exception {
+	    
+		Connection conn = DB.getConnection();
+
+	    String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+	    
+        try{
+        	PreparedStatement statement = conn.prepareStatement(Query.setPasswordToUser);
+        	statement.setString(1, hashedPassword);
+        	statement.setString(2, userId);
+        	
+        	logger.info("Changing passwd for User:"+userId+" passwd: "+hashedPassword);
+        	int rowsAffected = statement.executeUpdate();
+        	if (rowsAffected<1) {
+				return false;
+			}else {
+				sqlFile.append(statement.toString());
+				return true;
+			}
+        }catch (Exception e) {
+			throw new Exception("Something went wrong! please contact admin.");
+		}
+		
+
+	}
+	
+//	public static void main(String[] args) {
+//		try {
+//			CustomerDAO.getCustomerDAO().updatePasswd("22511651", "Chithapu");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 }

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import utils.DB;
 import utils.JSON;
+import utils.Query;
 
 /**
  * Servlet implementation class GetPendingApplications
@@ -46,9 +47,8 @@ public class GetPendingApplications extends HttpServlet {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			Connection conn = DB.getConnection();
-			String pendingStatusQuery = "SELECT a.application_id, b.cusID, c.`firstName`, c.`lastName`, a.Application_type, b.application_date FROM `Applications` a INNER JOIN `Bank_Account_Application` b ON a.application_id = b.application_id join `Customers` c on b.`cusID`= c.`cusID` WHERE a.status = 'pending';";
 			
-			PreparedStatement stmt = conn.prepareStatement(pendingStatusQuery);
+			PreparedStatement stmt = conn.prepareStatement(Query.fetchPendingApplications);
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {

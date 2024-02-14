@@ -23,13 +23,13 @@
         <div class="right-section">
             <h2 id="welcomeH">Welcome to Internet Banking</h2>
             <p>If you don't have an account, <a href="#">Register here</a></p>
-            <form id="login_form" action="#" method="POST">
+            <div id="login_form">
                 <label for="username">User Name</label>
                 <input type="text" id="username" name="username" required>
                 <label for="passwd">Password</label>
                 <input type="password" id="passwd" name="passwd" required>
-                <button type="submit">Login</button>
-            </form>
+                <button type="submit" onclick="loginUser()">Login</button>
+            </div>
             <div class="links">
                 <a href="#">Forgot Password?</a>
                 <a href="#">Forgot User id?</a>
@@ -43,8 +43,42 @@
     <script>
 
 
+        var loginCallfunc = function (responseText) {
+            var response = JSON.parse(responseText);
 
-        window.onload = function () {
+            if (response.statuscode == 200) {
+                // Session is valid, skip the login part
+                console.log('Session is valid. Skipping login.');
+                var role = getCookie("role");
+                switch (role) {
+                    case "Customer":
+                        window.location.href = "./customer.html"
+                        break;
+                    case "Employee":
+                        window.location.href = "./Employee/homepage.html"
+                        break;
+                    case "Admin":
+                        window.location.href = "./Admin.html"
+                        break;
+                    default:
+                        break;
+                }
+
+            } else {
+                setCookie('userID', '');
+                setCookie('role', '');
+                setCookie('sessionID', '');
+                return;
+            }
+        }
+
+
+
+        window.onload = checkIfLoggedIn();
+
+
+
+        function checkIfLoggedIn() {
 
             var cookies = getCookies();
 
@@ -63,21 +97,31 @@
 
             }
 
-            var loginCallfunc = function (responseText) {
-                var response = JSON.parse(xhr.responseText);
-
-                // Check if the session is valid
-                if (response.statuscode == 200) {
-                    // Session is valid, skip the login part
-                    console.log('Session is valid. Skipping login.');
-
-                    window.location.href = "./customer.html"
-                }
-            }
         };
 
 
 
+        function loginUser() {
+            var userID = _("#username").value;
+            var passwd = _("#passwd").value;
+
+            var data = `username=${userID}&passwd=${passwd}`;
+
+            sendRequest("Login", "application/x-www-form-urlencoded", data, callbackfn);
+
+            function callbackfn(responseText) {
+                var response = JSON.parse(responseText);
+                if (response.statuscode == 400) {
+                    setCookie('userID', '');
+                    setCookie('role', '');
+                    setCookie('sessionID', '');
+                    alert(response.errorMessage);
+                    return;
+                } else if (response.statuscode == 200) {
+                    checkIfLoggedIn();
+                }
+            }
+        }
 
 
 

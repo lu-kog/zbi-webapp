@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import utils.CommonLogger;
 import utils.DB;
 import utils.JSON;
+import utils.Query;
 import utils.sqlFile;
 
 /**
@@ -59,10 +60,9 @@ public class RejectApplication extends HttpServlet {
 			
 			if (DB.checkValueisExist(applicationId, "Applications", "application_id")) {
 				if (isPending(applicationId)) {
-					String query = "update `Applications` set status = 'rejected', `EmpID` = ?, comments = ? where application_id like ? ;";
 			        Connection conn = DB.getConnection();
 			        
-						PreparedStatement stmt = conn.prepareStatement(query);
+						PreparedStatement stmt = conn.prepareStatement(Query.rejectAnApplication);
 						stmt.setString(1, empID);
 						stmt.setString(2, reason);
 						stmt.setString(3, applicationId);
@@ -96,11 +96,11 @@ public class RejectApplication extends HttpServlet {
 	
 
 	private boolean isPending(String applicationId) throws Exception {
-        String query = "select status from Applications where application_id like ? ;";
+		
         Connection conn = DB.getConnection();
         
         try {
-			PreparedStatement stmt = conn.prepareStatement(query);
+			PreparedStatement stmt = conn.prepareStatement(Query.applicationStatusByRefID);
 			stmt.setString(1, applicationId);
 			ResultSet results = stmt.executeQuery();
 			if (results.next()) {

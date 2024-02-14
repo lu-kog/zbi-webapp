@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZBI Application Status Check</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            width: 300px;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ZBI Application Status Check</h1>
+    <form id="status-form">
+        <label for="refID">Application Reference ID</label>
+        <input type="text" id="refID" name="refID" required>
+        <button type="submit">Check Status</button>
+    </form>
+    <div id="status-message"></div>
+
+    <script src="script.js"></script>
+    <script>
+        const form = document.getElementById('status-form');
+        const statusMessage = document.getElementById('status-message');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            var refID = document.getElementById('refID').value;
+
+            fetchStatus(refID);
+        });
+
+        function fetchStatus(refID){
+            if(refID){
+                var reference = `refID=${refID}`;
+                sendRequest("ApplicationStatus", "application/x-www-form-urlencoded", reference, showStatus);
+
+            }
+        }
+
+        function showStatus(responseText){
+            var statusData = JSON.parse(responseText);
+            if(statusData.statuscode==200){
+
+            }else{
+                alert("no records found!");
+            }
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,147 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+#dashboard {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    background-color: #f5f8fb;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dashboard-header .dashboard-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.dashboard-header .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.dashboard-header .user-info .username {
+    font-size: 18px;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.dashboard-header .user-info .user-actions div {
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.dashboard-header .user-info .user-actions .transfer,
+.dashboard-header .user-info .user-actions .transactions {
+    background-color: #f6f8fa;
+}
+
+.dashboard-header .user-info .user-actions .accounts-and-cards,
+.dashboard-header .user-info .user-actions .settings {
+    background-color: #e9ecef;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-content .dashboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.dashboard-content .dashboard-item .dashboard-item-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.dashboard-content .dashboard-item .dashboard-item-value {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.dashboard-content .statistics {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.dashboard-content .statistics .statistics-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.dashboard-content .statistics .statistics-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* Spending Overview */
+.spending-overview {
+    width: 100%;
+    padding: 1rem;
+    background-color: #f5f8fb;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+}
+
+.spending-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+}
+
+.spending-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.spending-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.spending-item-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+}
+
+.spending-item-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}

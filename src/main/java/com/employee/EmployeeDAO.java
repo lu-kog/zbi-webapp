@@ -15,6 +15,7 @@ import com.customer.Customers;
 import utils.CommonLogger;
 import utils.DB;
 import utils.JSON;
+import utils.Query;
 import utils.sqlFile;
 
 public class EmployeeDAO {
@@ -33,12 +34,13 @@ public class EmployeeDAO {
             
             try {
             	
-            	PreparedStatement statement = conn.prepareStatement("insert into Applications (application_id, Application_type) values (?, 1);");
+            	PreparedStatement statement = conn.prepareStatement(Query.insertNewApplication);
             	statement.setString(1, refID);                
-
+            	
+            	sqlFile.append(statement.toString());
                 int rowsAffected = statement.executeUpdate();
                 
-                statement = conn.prepareStatement("insert into Bank_Account_Application (application_id, cusID, application_date, account_type) values (?, ?, ?, ?);");
+                statement = conn.prepareStatement(Query.insertNewBankApplication);
                 statement.setString(1, refID);
             	statement.setString(2, customer.getCusID());
                 statement.setDate(3, Date.valueOf(LocalDate.now()));
@@ -51,6 +53,7 @@ public class EmployeeDAO {
                     logger.error("Can't update new Application for cusID:" + customer.getCusID() + "refID: "+refID);
                     throw new Exception("Can't update new Application for your customer ID");
                 } else {
+                	sqlFile.append(statement.toString());
                     logger.info("New Application updated successfully. refID:"+refID);
                 }
             }catch (SQLException e) {
@@ -62,14 +65,12 @@ public class EmployeeDAO {
 	
 	public boolean approveApplication(String empID, String applicationId) throws Exception {
 		
-		String query = "update `Applications` set status = 'approved', `EmpID` = ? where application_id like ? ;";
         Connection conn = DB.getConnection();
         
         try {
-			PreparedStatement stmt = conn.prepareStatement(query);
+			PreparedStatement stmt = conn.prepareStatement(Query.approveApplication);
 			stmt.setString(1, empID);
 			stmt.setString(2, applicationId);
-			
 			
 			int affectedRow = stmt.executeUpdate();
 			if (affectedRow == 1) {

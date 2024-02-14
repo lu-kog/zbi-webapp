@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import com.accounts.Account;
 
@@ -64,11 +65,10 @@ public class DB {
 	
 	
 	public static String createNewSession(String userID) throws Exception {
-		String sessionInsrtQry = "INSERT INTO Session (sessionID, userID, loggedTime) VALUES (?, ?, ?);";
 		
 		Connection conn = DB.getConnection();
         
-        try (PreparedStatement statement = conn.prepareStatement(sessionInsrtQry)) {
+        try (PreparedStatement statement = conn.prepareStatement(Query.createNewSession)) {
         	
         	String sessionID = Generator.createUUID("Session", "sessionID");
         	Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
@@ -97,16 +97,15 @@ public class DB {
 	
 	
 	public static void deleteSession(String userID) throws Exception {
-		String sessionDeltQry = "DELETE FROM Session WHERE userID like ?;";
 		
 		Connection conn = DB.getConnection();
         
-        try (PreparedStatement statement = conn.prepareStatement(sessionDeltQry)) {
+        try (PreparedStatement statement = conn.prepareStatement(Query.deleteSession)) {
         	
         	statement.setString(1, userID);
 
             if(statement.execute()) {
-            	sqlFile.append(sessionDeltQry);
+            	sqlFile.append(statement.toString());
                 logger.info("session deleted successfully.");
 			}
         }catch (SQLException e) {
@@ -115,16 +114,23 @@ public class DB {
         }
 
     }
+	
+	
+//	public static String createOTP(String sessionID) {
+//		//
+//		
+//	}
+
+	
 
 
 	
 	public static void createNewAccount(String cusID, Account newAc) throws Exception {
         try {
         	Connection conn = DB.getConnection();
-            String newAcntInsrt = "INSERT INTO Accounts (AccountID, cusID, IFSC, AccType, balance, dateOpened, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
             
-            	PreparedStatement statement = conn.prepareStatement(newAcntInsrt);
-                // Set values for the prepared statement
+            	PreparedStatement statement = conn.prepareStatement(Query.createNewAccount);
+                
                 statement.setString(1, newAc.getAccountNumber());
                 statement.setString(2, cusID);
                 statement.setString(3, newAc.getIfsc());
@@ -149,6 +155,35 @@ public class DB {
             e.printStackTrace();
         }
     }
+
+
+	public static JSONObject fetchApplication(String refId) throws Exception {
+		
+		JSONObject returnJson = new JSONObject();
+		Connection conn = DB.getConnection();
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(Query.fetchApplicationDetails);
+			
+			stmt.setString(1, refId);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				returnJson.put("application_id", rs.getString("application_id"));
+				returnJson.put("application_date", rs.getDate("application_date"));
+				returnJson.put("application_type", rs.getInt("application_type"));
+				returnJson.put("status", rs.getString("status"));
+				returnJson.put("comments", rs.getString("comments"));
+				
+				return returnJson;
+			}else {
+				throw new Exception("Application not found!");
+			}
+		}catch (Exception e) {
+			throw new Exception("Can't fetch application details.");
+		}
+	}
 
 	
 	

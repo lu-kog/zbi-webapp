@@ -23,7 +23,7 @@ import utils.CommonLogger;
 import utils.DB;
 import utils.JSON;
 import utils.sqlFile;
-
+import utils.Query;
 /**
  * Servlet implementation class LoginUser
  */
@@ -83,12 +83,11 @@ public class LoginUser extends HttpServlet {
 	
 	
 	private boolean login(String username, String passwdString) throws Exception {
-		String getpswdQry = "select passwd from `Users` where `userID` like ? ;";
 		Connection conn = DB.getConnection();
 
 		PreparedStatement statement = null;
 		try {
-			statement = conn.prepareStatement(getpswdQry);
+			statement = conn.prepareStatement(Query.getHashedPasswd);
 		    statement.setString(1, username);
 		    
 		    ResultSet resultSet = statement.executeQuery();

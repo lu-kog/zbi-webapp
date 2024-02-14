@@ -21,6 +21,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import utils.CommonLogger;
 import utils.DB;
 import utils.JSON;
+import utils.Query;
 
 /**
  * Servlet Filter implementation class UserAuthorization
@@ -82,12 +83,12 @@ public class UserAuthorization extends HttpFilter implements Filter {
 	}
 	
 	String findRole(String username) throws Exception {
-		String findRoleQry = "SELECT role FROM Users WHERE userID like ?";
+		
 		Connection conn = DB.getConnection();
 
 		PreparedStatement statement = null;
 		try {
-			statement = conn.prepareStatement(findRoleQry);
+			statement = conn.prepareStatement(Query.findRoleOfUser);
 		    statement.setString(1, username);
 		    
 		    ResultSet resultSet = statement.executeQuery();
