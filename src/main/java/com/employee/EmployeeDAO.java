@@ -29,13 +29,15 @@ public class EmployeeDAO {
 		return obj;
 	}
 
-	public void addApplication(Customers customer, String refID, int accountType) throws Exception {
+	public void addApplication(Customers customer, String refID, int application_type, int accountType) throws Exception {
 		Connection conn = DB.getConnection();
             
             try {
             	
             	PreparedStatement statement = conn.prepareStatement(Query.insertNewApplication);
-            	statement.setString(1, refID);                
+            	statement.setString(1, refID); 
+            	statement.setDate(2, Date.valueOf(LocalDate.now()));
+            	statement.setInt(3, application_type);
             	
             	sqlFile.append(statement.toString());
                 int rowsAffected = statement.executeUpdate();
@@ -43,8 +45,7 @@ public class EmployeeDAO {
                 statement = conn.prepareStatement(Query.insertNewBankApplication);
                 statement.setString(1, refID);
             	statement.setString(2, customer.getCusID());
-                statement.setDate(3, Date.valueOf(LocalDate.now()));
-                statement.setInt(4, accountType);
+                statement.setInt(3, accountType);
 
                 
                 rowsAffected += statement.executeUpdate();

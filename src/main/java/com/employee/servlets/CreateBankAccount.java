@@ -20,6 +20,7 @@ import utils.DB;
 import utils.Generator;
 import utils.JSON;
 import utils.Query;
+import utils.SMS;
 
 import com.accounts.Account;
 import com.customer.CustomerDAO;
@@ -84,7 +85,7 @@ public class CreateBankAccount extends HttpServlet {
 				email = results.getString("email");
 				phone = results.getString("phone");
 				accType = results.getString("account_type");
-
+				String customerName = (results.getString("firstName")+results.getString("lastName"));
 				String account_number = Generator.ValidNumerical(15, "Accounts", "AccountID");
 				
 				logger.info("Account details generated:"+applicationID+" cusID: "+cusID+ " Ac:"+account_number+ " email:"+email+" phone:"+phone+" accType:"+accType);
@@ -100,6 +101,7 @@ public class CreateBankAccount extends HttpServlet {
 					String newPasswd = Generator.generateStrongPassword(8);
 					CustomerDAO.getCustomerDAO().updatePasswd(cusID, newPasswd);
 					// send sms or mail
+					SMS.send(phone, SMS.newAccountApproved(customerName, account_number, accType, 101.0, newAccount.getOpenedDate(), cusID, newPasswd));
 					
 					EmployeeDAO.getEmpDAO().approveApplication(empID, applicationID);
 					System.out.println("Everything works good!");

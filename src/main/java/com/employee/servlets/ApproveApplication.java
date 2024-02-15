@@ -94,7 +94,7 @@ public class ApproveApplication extends HttpServlet {
         Connection conn = DB.getConnection();
         
         try {
-			PreparedStatement stmt = conn.prepareStatement(Query.selectStatusOfApplicationByID);
+			PreparedStatement stmt = conn.prepareStatement(Query.applicationStatusByRefID);
 			stmt.setString(1, applicationId);
 			
 			logger.info("getting status: "+stmt);

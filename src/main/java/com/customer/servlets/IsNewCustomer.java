@@ -123,7 +123,7 @@ public class IsNewCustomer extends HttpFilter implements Filter {
             statement.setString(1, mobileNumber);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-				if (rs.getString(1).equals("Active")) {
+				if (rs.getString("status").equals("Active")) {
 					return true;
 				}
 			}
@@ -140,12 +140,12 @@ public class IsNewCustomer extends HttpFilter implements Filter {
 
 		Connection conn = DB.getConnection();
 		
-		try (PreparedStatement statement = conn.prepareStatement(Query.getApplicationStatusByPhone)) {
+		try (PreparedStatement statement = conn.prepareStatement(Query.fetchApplicationByPhone)) {
             statement.setString(1, mobileNumber);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
             	logger.info("hasPendingApplication: "+rs.getString(1));
-				if (rs.getString(1).equals("pending")) {
+				if (rs.getString("status").equals("pending")) {
 					return true;
 				}
 			}
@@ -162,14 +162,14 @@ public class IsNewCustomer extends HttpFilter implements Filter {
 
 		Connection conn = DB.getConnection();
 		
-		try (PreparedStatement statement = conn.prepareStatement(Query.getApplicationDateByPhone)) {
+		try (PreparedStatement statement = conn.prepareStatement(Query.fetchApplicationByPhone)) {
             statement.setString(1, mobileNumber);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
             	logger.info("hasRejectedApplication: passed");
             	
-            	LocalDate applicationDate = rs.getDate(1).toLocalDate();
-            	String appliStatus = rs.getString(2);
+            	LocalDate applicationDate = rs.getDate("application_date").toLocalDate();
+            	String appliStatus = rs.getString("status");
             	LocalDate today = LocalDate.now().minusDays(1);
             	
 				if (appliStatus.equals("rejected")) {

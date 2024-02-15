@@ -45,18 +45,19 @@ public class SessionAuthorization extends HttpServlet {
 		
 		Cookie[] cookies = request.getCookies();
         String sessionID = null;
-
+        String cusID = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("sessionID")) {
                      sessionID = cookie.getValue();
-                     break;
-                }
+                }else if (cookie.getName().equals("userID")) {
+                    cusID = cookie.getValue();
+               }
             }
         }
         
         try {
-        	if (validateSession(sessionID)) {
+        	if (validateSession(sessionID, cusID)) {
             	JSONObject respObject = new JSONObject();
     	        respObject.put("statuscode", 200);
     	        logger.info("Response Sent! 200 :"+ sessionID );
@@ -76,9 +77,9 @@ public class SessionAuthorization extends HttpServlet {
         
 	}
 
-	private boolean validateSession(String sessionID) {
+	private boolean validateSession(String sessionID, String cusID) throws Exception {
 		
-		return DB.checkValueisExist(sessionID, "Session", "sessionID");
+		return DB.validateSession(sessionID, cusID);
 	}
 
 }

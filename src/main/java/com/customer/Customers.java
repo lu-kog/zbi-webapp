@@ -1,6 +1,12 @@
 package com.customer;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
+
+import com.accounts.Account;
+
 import utils.CommonLogger;
 
 public class Customers {
@@ -11,6 +17,8 @@ public class Customers {
     private String email;
     private String phone;
     private String address;
+    
+    private Map<String, Account> Accounts = new HashMap<String, Account>();
 
 	static Logger logger = new CommonLogger(Customers.class).getLogger();
 	

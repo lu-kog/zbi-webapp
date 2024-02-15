@@ -1,18 +1,23 @@
 package com.accounts;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.customer.CustomerDAO;
 import com.customer.Customers;
 
 public class Account {
 	String accountNumber;
-	Customers customer;
 	String ifsc;
 	String account_type;
 	double balance;
 	LocalDate openedDate;
 	boolean status;
+	List<Transactions> transactions = new ArrayList<Transactions>();
+	List<Cards> cards = new ArrayList<Cards>();
+	
+	
 	public Account(String accountNumber, String ifsc, String account_type, double balance, LocalDate openedDate,
 			boolean status) {
 		
@@ -30,9 +35,7 @@ public class Account {
 	public String getAccountNumber() {
 		return accountNumber;
 	}
-	public Customers getCustomer() {
-		return customer;
-	}
+	
 	public String getIfsc() {
 		return ifsc;
 	}
@@ -49,14 +52,17 @@ public class Account {
 		return status;
 	}
 	
+	public List<Transactions> getTransactions(){
+		return transactions;
+	}
+	
+	
 	// setters
 	
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-	public void setCustomer(Customers customer) {
-		this.customer = customer;
-	}
+	
 	public void setIfsc(String ifsc) {
 		this.ifsc = ifsc;
 	}
@@ -73,8 +79,11 @@ public class Account {
 		this.status = status;
 	}
 	
-//	List<Card> Cards;
-//	List<Loan> Loans;
+	public void fetchTransactions() throws Exception {
+		this.transactions = CustomerDAO.fetchTransactions(this.accountNumber);
+	}
+
+	
 	
 	
 }

@@ -77,7 +77,7 @@ public class ApplyForAccount extends HttpServlet {
 	        CustomerDAO.getCustomerDAO().updateCustomer(newCustomer);
 	        
 	        // update his application in db
-	        EmployeeDAO.getEmpDAO().addApplication(newCustomer, refID, accountType);
+	        EmployeeDAO.getEmpDAO().addApplication(newCustomer, refID, 1, accountType);
 	        
 	        JSONObject respObject = new JSONObject();
 	        respObject.put("statuscode", 200);

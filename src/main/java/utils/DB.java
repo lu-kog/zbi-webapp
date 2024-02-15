@@ -22,7 +22,6 @@ public class DB {
 	public static Connection getConnection() {
 		
 		
-
 		if (conn == null) {
 			
 			try {
@@ -107,6 +106,37 @@ public class DB {
             if(statement.execute()) {
             	sqlFile.append(statement.toString());
                 logger.info("session deleted successfully.");
+			}
+        }catch (SQLException e) {
+            logger.error("SQL error on deleting session"+e);
+            throw new Exception("session error! Please contact admin.");
+        }
+
+    }
+	
+	
+public static boolean validateSession(String sessionID, String userID) throws Exception {
+		
+		Connection conn = DB.getConnection();
+        
+        try {
+        	PreparedStatement statement = conn.prepareStatement(Query.validateSession);
+        	
+        	statement.setString(1, userID);
+
+        	ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+            	boolean validSession = sessionID.equals(rs.getString("sessionID"));
+            	if (validSession) {
+					logger.info("valid session!"+sessionID);
+					return true;
+				}else {
+					logger.info("Session invalid!"+sessionID);
+					return false;
+				}
+			}else {
+				logger.info("sesison not found!");
+				throw new Exception("Session not found!"+sessionID);
 			}
         }catch (SQLException e) {
             logger.error("SQL error on deleting session"+e);
